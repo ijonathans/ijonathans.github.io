@@ -6,11 +6,11 @@
     <title>Ignatius Jonathan Sugijono - Portfolio</title>
     <style>
         :root {
-            --background: #0a0a0a;
+            --background: #17072b;
             --text: #ffffff;
-            --accent: #3498db;
-            --secondary: #2c3e50;
-            --tertiary: #1abc9c;
+            --accent: #22ddd2;
+            --secondary: #2e73ea;
+            --tertiary: #8c15e9;
         }
 
         * {
@@ -25,7 +25,7 @@
             line-height: 1.6;
             overflow-x: hidden;
             position: relative;
-            background-color: #0a0a0a;
+            background-color: var(--background);
         }
 
         /* Animated Background */
@@ -45,7 +45,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: linear-gradient( 45deg, #0a192f, #112240, #1a365d, #0d1b2a, #112240, #0a3069 );
+            background: linear-gradient(45deg, #17072b, #172d67, #22ddd2, #2e73ea, #8c15e9);
             background-size: 400% 400%;
             animation: gradientMovement 15s ease infinite;
         }
@@ -80,7 +80,7 @@
 
         .glow {
             position: absolute;
-            background: radial-gradient(circle, rgba(52, 152, 219, 0.15) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(34, 221, 210, 0.15) 0%, transparent 70%);
             width: 150%;
             height: 150%;
             top: -25%;
@@ -97,6 +97,25 @@
             100% {
                 transform: translate(-5%, -5%);
             }
+        }
+
+        /* Particles */
+        .particles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            transition: transform 1s ease-out;
         }
 
         /* Rest of your styles */
@@ -125,7 +144,7 @@
             opacity: 0;
             transform: translateY(20px);
             animation: fadeUp 0.8s forwards;
-            text-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+            text-shadow: 0 0 10px rgba(34, 221, 210, 0.3);
         }
 
         .hero p {
@@ -155,13 +174,13 @@
             background-color: rgba(44, 62, 80, 0.7);
             backdrop-filter: blur(5px);
             transition: transform 0.3s, background-color 0.3s;
-            border: 1px solid rgba(52, 152, 219, 0.3);
+            border: 1px solid rgba(34, 221, 210, 0.3);
         }
 
             .badge:hover {
                 transform: translateY(-5px);
                 background-color: var(--accent);
-                box-shadow: 0 0 15px rgba(52, 152, 219, 0.5);
+                box-shadow: 0 0 15px rgba(34, 221, 210, 0.5);
             }
 
         /* Projects Section */
@@ -184,7 +203,7 @@
                 width: 50%;
                 height: 4px;
                 background-color: var(--accent);
-                box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+                box-shadow: 0 0 10px rgba(34, 221, 210, 0.5);
             }
 
         .project-grid {
@@ -207,7 +226,7 @@
 
             .project-card:hover {
                 transform: translateY(-10px);
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(52, 152, 219, 0.2);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(34, 221, 210, 0.2);
             }
 
             .project-card:before {
@@ -265,7 +284,7 @@
             border-radius: 20px;
             overflow: hidden;
             position: relative;
-            border: 2px solid rgba(52, 152, 219, 0.3);
+            border: 2px solid rgba(34, 221, 210, 0.3);
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
         }
 
@@ -322,7 +341,7 @@
             .form-control:focus {
                 outline: none;
                 border-color: var(--accent);
-                box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+                box-shadow: 0 0 0 3px rgba(34, 221, 210, 0.3);
             }
 
         textarea.form-control {
@@ -345,8 +364,8 @@
 
             .btn:hover {
                 transform: translateY(-5px);
-                background-color: #2980b9;
-                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 0 15px rgba(52, 152, 219, 0.5);
+                background-color: #1eb3a9;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 0 15px rgba(34, 221, 210, 0.5);
             }
 
         /* Footer */
@@ -373,7 +392,7 @@
             .social-link:hover {
                 color: var(--accent);
                 transform: translateY(-5px);
-                text-shadow: 0 0 10px rgba(52, 152, 219, 0.7);
+                text-shadow: 0 0 10px rgba(34, 221, 210, 0.7);
             }
 
         .copyright {
@@ -411,11 +430,11 @@
         }
 
             .navbar.scrolled {
-                background-color: rgba(10, 10, 10, 0.8);
+                background-color: rgba(23, 7, 43, 0.8);
                 backdrop-filter: blur(10px);
                 padding: 1rem 0;
                 box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-                border-bottom: 1px solid rgba(52, 152, 219, 0.2);
+                border-bottom: 1px solid rgba(34, 221, 210, 0.2);
             }
 
         .navbar-container {
@@ -429,7 +448,7 @@
             font-weight: 700;
             color: var(--text);
             text-decoration: none;
-            text-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+            text-shadow: 0 0 10px rgba(34, 221, 210, 0.3);
         }
 
         .nav-links {
@@ -446,7 +465,7 @@
 
             .nav-link:hover {
                 color: var(--accent);
-                text-shadow: 0 0 10px rgba(52, 152, 219, 0.7);
+                text-shadow: 0 0 10px rgba(34, 221, 210, 0.7);
             }
 
         /* Responsive */
@@ -495,10 +514,13 @@
         <div class="glow"></div>
     </div>
 
+    <!-- Particles Container -->
+    <div class="particles-container" id="particles"></div>
+
     <!-- Navbar -->
     <nav class="navbar">
         <div class="container navbar-container">
-            <a href="#" class="logo">Ignatius Jonathan Sugijono</a>
+            <a href="#" class="logo">I. Jonathan Sugijono</a>
             <div class="nav-links">
                 <a href="#projects" class="nav-link">Projects</a>
                 <a href="#about" class="nav-link">About</a>
@@ -510,12 +532,13 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="container hero-content">
-            <h1>Hi, my name is Ignatius Jonathan Sugijono</h1>
-            <p>Data Scientist, AI & Machine Learning Specialist</p>
+            <h3>Hi, my name is</h3>
+            <h1>Ignatius Jonathan Sugijono</h1>
+            <p>Transforming Data into Intelligence, Driving Innovation with AI and Machine Learning.</p>
             <div class="hero-badges">
                 <div class="badge">Python</div>
                 <div class="badge">Machine Learning</div>
-                <div class="badge">Data Analysis</div>
+                <div class="badge">Data Science</div>
                 <div class="badge">AI</div>
                 <div class="badge">Deep Learning</div>
             </div>
@@ -667,7 +690,63 @@
 
             // Subtle movement following cursor
             glow.style.transform = `translate(${-10 + x * 20}%, ${-10 + y * 20}%)`;
+
+            // Move particles with mouse
+            moveParticles(e.clientX, e.clientY);
         });
+
+        // Create particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+
+                // Random size between 2-6px
+                const size = Math.random() * 4 + 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+
+                // Random position
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+
+                // Random color from our palette
+                const colors = ['#22ddd2', '#2e73ea', '#8c15e9', 'rgba(255, 255, 255, 0.8)'];
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+                // Add to container
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Move particles in relation to mouse position
+        function moveParticles(mouseX, mouseY) {
+            const particles = document.querySelectorAll('.particle');
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+
+            particles.forEach(particle => {
+                const particleX = particle.offsetLeft;
+                const particleY = particle.offsetTop;
+
+                // Calculate distance from mouse to particle
+                const distX = mouseX - particleX;
+                const distY = mouseY - particleY;
+
+                // Calculate movement based on distance (closer particles move more)
+                const moveX = distX / (Math.random() * 100 + 50);
+                const moveY = distY / (Math.random() * 100 + 50);
+
+                // Apply movement
+                particle.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            });
+        }
+
+        // Initialize particles on page load
+        createParticles();
     </script>
 </body>
 </html>
