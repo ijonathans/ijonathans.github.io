@@ -6,7 +6,6 @@
     <title>Ignatius Jonathan Sugijono - Portfolio with Enhanced Three.js Wave Particles</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
-        /* Existing styles remain unchanged */
         :root {
             --background: #17072b;
             --text: #ffffff;
@@ -519,6 +518,68 @@
                 display: none;
             }
         }
+
+        .skills {
+            padding: 100px 0;
+            overflow: hidden;
+        }
+
+        .skills-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .skills-scroll {
+            display: flex;
+            overflow-x: hidden; /* Hide scrollbar */
+            gap: 2rem;
+            margin: 0 auto;
+            position: relative;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE/Edge */
+            white-space: nowrap; /* Prevent wrapping */
+        }
+
+            .skills-scroll::-webkit-scrollbar {
+                display: none; /* Chrome, Safari, Opera */
+            }
+
+        .skill-card {
+            flex: 0 0 auto;
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+            .skill-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 0 15px rgba(34, 221, 210, 0.2);
+            }
+
+            .skill-card img {
+                width: 40px;
+                height: 40px;
+                object-fit: contain;
+                margin-bottom: 0.5rem;
+            }
+
+            .skill-card p {
+                font-size: 0.9rem;
+                font-weight: 500;
+                color: var(--text);
+            }
     </style>
 </head>
 <body>
@@ -535,6 +596,7 @@
             <a href="#" class="logo">I. Jonathan Sugijono</a>
             <div class="nav-links">
                 <a href="#projects" class="nav-link">Projects</a>
+                <a href="#skills" class="nav-link">Skills</a>
                 <a href="#about" class="nav-link">About</a>
                 <a href="#contact" class="nav-link">Contact</a>
             </div>
@@ -594,6 +656,13 @@
         </div>
     </section>
 
+    <section id="skills" class="skills">
+        <div class="container skills-container">
+            <h2 class="section-title reveal">Skills</h2>
+            <div class="skills-scroll reveal"></div>
+        </div>
+    </section>
+
     <section id="about" class="about">
         <div class="container">
             <div class="about-content">
@@ -605,7 +674,7 @@
                 <div class="about-text reveal">
                     <h2>About Me</h2>
                     <p>Hi, my name is Jonathan, and I'm currently pursuing a master's degree in data science at Georgia State University. With a strong foundation in analytical thinking, problem-solving, and a keen eye for detail.</p>
-                    <p>When I'm not coding, you can find me play any sports and bouldering which is a new thing to me. I believe in continuous learning and pushing the boundaries of what's possible with Artificial Intelligence technology</p>
+                    <p>When I'm not coding, you can find me playing sports or bouldering, which is a new hobby for me. I believe in continuous learning and pushing the boundaries of what's possible with Artificial Intelligence technology.</p>
                 </div>
             </div>
         </div>
@@ -658,6 +727,10 @@
 
             renderer = new THREE.WebGLRenderer({ alpha: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
+            if (!container) {
+                console.error('threejs-container not found!');
+                return;
+            }
             container.appendChild(renderer.domElement);
 
             const particleCountX = 600;
@@ -665,7 +738,6 @@
             const particleCount = particleCountX * particleCountY;
             const geometry = new THREE.BufferGeometry();
             const positions = new Float32Array(particleCount * 3);
-            const basePositions = new Float32Array(particleCount * 3);
 
             const aspectRatio = window.innerWidth / window.innerHeight;
             const width = 600 * aspectRatio;
@@ -679,22 +751,17 @@
                 positions[i3] = x;
                 positions[i3 + 1] = y;
                 positions[i3 + 2] = z;
-
-                basePositions[i3] = x;
-                basePositions[i3 + 1] = y;
-                basePositions[i3 + 2] = z;
             }
 
             geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            geometry.setAttribute('basePosition', new THREE.BufferAttribute(basePositions, 3));
+            geometry.attributes.position.needsUpdate = true;
 
             const vertexShader = `
                     uniform float time;
-                    attribute vec3 basePosition;
                     varying float vDepth;
                     void main() {
-                        vec3 pos = basePosition;
-                        pos.y = sin(pos.x * 0.05 + time) * 1.0 + cos(pos.z * 0.05 + time) * 0.5;
+                        vec3 pos = position;
+                        pos.y = sin(pos.x * 0.05 + time) * 1.0 + cos(pos.z * 0.05 + time) * 1.0;
                         vDepth = pos.z;
                         gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
                         gl_PointSize = 2.0;
@@ -736,20 +803,23 @@
             const aspectRatio = window.innerWidth / window.innerHeight;
             const width = 600 * aspectRatio;
             const height = 600;
-            const positions = particles.geometry.attributes.basePosition.array;
-            const particleCountX = 200;
-            const particleCountY = 150;
+            const positions = particles.geometry.attributes.position.array;
+            const particleCountX = 600;
+            const particleCountY = 500;
 
             for (let i = 0, i3 = 0; i < particleCountX * particleCountY; i++, i3 += 3) {
                 positions[i3] = ((i % particleCountX) / (particleCountX - 1) - 0.5) * width;
                 positions[i3 + 2] = (Math.floor(i / particleCountX) / (particleCountY - 1) - 0.5) * height;
             }
-            particles.geometry.attributes.basePosition.needsUpdate = true;
+            particles.geometry.attributes.position.needsUpdate = true;
         }
 
         function animate() {
             requestAnimationFrame(animate);
-            particles.material.uniforms.time.value += 0.03;
+            if (particles && particles.material.uniforms) {
+                particles.material.uniforms.time.value += 0.05;
+                particles.geometry.attributes.position.needsUpdate = true;
+            }
             renderer.render(scene, camera);
         }
 
@@ -793,7 +863,145 @@
             glow.style.transform = `translate(${-10 + x * 20}%, ${-10 + y * 20}%)`;
         });
 
-        document.addEventListener('DOMContentLoaded', initThreeJS);
+        function setupSkillsScroll() {
+            const scrollContainer = document.querySelector('.skills-scroll');
+            scrollContainer.innerHTML = ''; // Clear existing content
+
+            const skills = [
+                { src: 'https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg', text: 'Python' },
+                { src: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/R_logo.svg', text: 'R' },
+                { src: 'https://upload.wikimedia.org/wikipedia/en/thumb/d/dd/MySQL_logo.svg/100px-MySQL_logo.svg.png', text: 'MySQL' },
+                { src: 'https://pandas.pydata.org/static/img/pandas_mark.svg', text: 'Pandas' },
+                { src: 'https://numpy.org/images/logo.svg', text: 'NumPy' },
+                { src: 'https://scipy.org/images/logo.svg', text: 'SciPy' },
+                { src: 'https://matplotlib.org/stable/_static/logo2.svg', text: 'Matplotlib' },
+                { src: 'https://seaborn.pydata.org/_static/logo-wide-lightbg.svg', text: 'Seaborn' },
+                { src: 'https://upload.wikimedia.org/wikipedia/en/thumb/5/5a/MongoDB_Fores-Green.svg/250px-MongoDB_Fores-Green.svg.png', text: 'MongoDB' },
+                { src: 'https://logos-world.net/wp-content/uploads/2021/10/Tableau-Symbol.png', text: 'Tableau' },
+                { src: 'https://ggplot2.tidyverse.org/logo.png', text: 'ggplot' },
+                { src: 'https://jupyter.org/assets/homepage/main-logo.svg', text: 'Jupyter Notebook' },
+                { src: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg', text: 'GitHub' },
+                { src: 'https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png', text: 'Scikit-learn' },
+                { src: 'https://i.ibb.co/Q32HMCJy/artificial-intelligence-1.png', text: 'Generative AI' }
+            ];
+
+            // Duplicate content three times for seamless looping
+            for (let i = 0; i < 3; i++) {
+                skills.forEach(skill => {
+                    const div = document.createElement('div');
+                    div.className = 'skill-card';
+                    div.innerHTML = `<img src="${skill.src}" alt="${skill.text}"><p>${skill.text}</p>`;
+                    scrollContainer.appendChild(div);
+                });
+            }
+
+            const skillCards = scrollContainer.children;
+            const singleSetWidth = Array.from(skillCards).slice(0, skills.length).reduce((sum, card) => {
+                return sum + card.offsetWidth + 32; // 32px for gap (2rem)
+            }, 0);
+
+            let scrollPosition = 0;
+            const scrollSpeed = 0.5; // Pixels per frame, adjust for desired speed
+            let lastTime = null;
+            let isPaused = false;
+
+            function animateScroll(timestamp) {
+                if (!lastTime) lastTime = timestamp;
+                const deltaTime = timestamp - lastTime;
+                lastTime = timestamp;
+
+                if (!isPaused) {
+                    scrollPosition += scrollSpeed * (deltaTime / 16.67); // Normalize to 60fps
+                    if (scrollPosition >= singleSetWidth) {
+                        scrollPosition -= singleSetWidth; // Seamless reset
+                        scrollContainer.scrollLeft = scrollPosition;
+                    } else {
+                        scrollContainer.scrollTo({
+                            left: scrollPosition,
+                            behavior: 'auto' // Continuous motion
+                        });
+                    }
+                }
+
+                requestAnimationFrame(animateScroll);
+            }
+
+            requestAnimationFrame(animateScroll);
+
+            // Pause on hover
+            scrollContainer.addEventListener('mouseenter', () => {
+                isPaused = true;
+            });
+
+            scrollContainer.addEventListener('mouseleave', () => {
+                isPaused = false;
+            });
+
+            // Manual scrolling
+            let isScrolling = false;
+            let startX = 0;
+            let scrollLeft = 0;
+
+            scrollContainer.addEventListener('mousedown', (e) => {
+                isScrolling = true;
+                startX = e.pageX - scrollContainer.offsetLeft;
+                scrollLeft = scrollContainer.scrollLeft;
+                isPaused = true; // Pause auto-scroll during manual scroll
+            });
+
+            scrollContainer.addEventListener('mouseleave', () => {
+                isScrolling = false;
+                isPaused = false; // Resume auto-scroll
+            });
+
+            scrollContainer.addEventListener('mouseup', () => {
+                isScrolling = false;
+                isPaused = false; // Resume auto-scroll
+            });
+
+            scrollContainer.addEventListener('mousemove', (e) => {
+                if (!isScrolling) return;
+                e.preventDefault();
+                const x = e.pageX - scrollContainer.offsetLeft;
+                const walk = (x - startX) * 1.5;
+                scrollContainer.scrollLeft = scrollLeft - walk;
+                scrollPosition = scrollContainer.scrollLeft % singleSetWidth; // Keep scrollPosition in sync
+            });
+
+            // Handle manual scroll looping
+            scrollContainer.addEventListener('scroll', () => {
+                if (!isScrolling) return;
+                if (scrollContainer.scrollLeft >= singleSetWidth) {
+                    scrollContainer.scrollLeft -= singleSetWidth;
+                    scrollPosition = scrollContainer.scrollLeft;
+                } else if (scrollContainer.scrollLeft < 0) {
+                    scrollContainer.scrollLeft += singleSetWidth;
+                    scrollPosition = scrollContainer.scrollLeft;
+                }
+            });
+
+            // Adjust on resize
+            window.addEventListener('resize', () => {
+                const newSingleSetWidth = Array.from(skillCards).slice(0, skills.length).reduce((sum, card) => {
+                    return sum + card.offsetWidth + 32;
+                }, 0);
+                if (scrollPosition >= newSingleSetWidth) {
+                    scrollPosition = scrollPosition % newSingleSetWidth;
+                    scrollContainer.scrollLeft = scrollPosition;
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initThreeJS();
+            setupSkillsScroll();
+
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(setupSkillsScroll, 250);
+            });
+        });
     </script>
 </body>
 </html>
