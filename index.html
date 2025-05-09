@@ -492,43 +492,91 @@
         }
         /* Chat container styles */
         .ai-chat-container {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        z-index: 1000;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
         }
 
         /* Chat button styles */
         .ai-chat-button {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        background-color: #647183;
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #647183;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .ai-chat-button:hover {
+            transform: scale(1.1);
+            background-color: var(--accent);
         }
 
         /* Chat icon */
         .ai-chat-button svg {
-        width: 30px;
-        height: 30px;
+            width: 30px;
+            height: 30px;
         }
 
         /* Chat iframe */
         .ai-chat-iframe {
-        display: none;
-        width: 500px;
-        height: 600px;
-        position: fixed;
-        bottom: 90px;
-        right: 20px;
-        border: none;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+            width: 90vw;
+            max-width: 500px;
+            height: 600px;
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .ai-chat-iframe.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .ai-chat-iframe {
+                width: 85vw;
+                height: 500px;
+                right: 10px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .ai-chat-iframe {
+                width: 94vw;
+                height: 70vh;
+                max-height: 500px;
+                right: 3vw;
+                left: 3vw;
+                bottom: 80px;
+            }
+            
+            .ai-chat-container {
+                right: 10px;
+            }
+            
+            .ai-chat-button {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .ai-chat-button svg {
+                width: 24px;
+                height: 24px;
+            }
         }
 
         .logo {
@@ -1011,10 +1059,20 @@
             let isOpen = false;
             
             toggleButton.addEventListener('click', function() {
-            isOpen = !isOpen;
-            chatIframe.style.display = isOpen ? 'block' : 'none';
-            // Optional: Focus iframe when opened
-            // if (isOpen) chatIframe.contentWindow.focus();
+                isOpen = !isOpen;
+                if (isOpen) {
+                    chatIframe.style.display = 'block';
+                    // Give a small delay to allow display:block to take effect before animating
+                    setTimeout(() => {
+                        chatIframe.classList.add('show');
+                    }, 10);
+                } else {
+                    chatIframe.classList.remove('show');
+                    // Wait for animation to finish before hiding the element
+                    setTimeout(() => {
+                        chatIframe.style.display = 'none';
+                    }, 300); // match transition duration
+                }
             });
             
             
