@@ -217,9 +217,10 @@
             }
 
         .project-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 4rem;
+            margin-bottom: 2rem;
         }
 
         .project-card {
@@ -232,6 +233,11 @@
             overflow: hidden;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 2rem;
+            max-width: 100%;
         }
 
             .project-card:hover {
@@ -255,32 +261,46 @@
                 opacity: 1;
             }
 
-            .project-card img {
-                width: 100%;
-                height: auto;
+            .project-card .project-image {
+                flex: 0 0 40%;
                 border-radius: 10px;
-                margin-bottom: 1.5rem;
-                transition: transform 0.3s;
+                overflow: hidden;
             }
 
-            .project-card:hover img {
-                transform: scale(1.05);
+            .project-card .project-content {
+                flex: 0 0 55%;
             }
 
-            .project-card h3 {
-                font-size: 1.5rem;
+            .project-card .project-content h3 {
+                font-size: 1.8rem;
                 margin-bottom: 1rem;
             }
 
-            .project-card p {
+            .project-card .project-content p {
                 margin-bottom: 1.5rem;
-                opacity: 0.8;
+                opacity: 0.9;
+                line-height: 1.6;
+            }
+
+            .project-card .project-image img {
+                width: 100%;
+                height: auto;
+                display: block;
+                border-radius: 8px;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+                transition: transform 0.3s, box-shadow 0.3s;
+            }
+
+            .project-card:hover .project-image img {
+                transform: scale(1.03);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 15px rgba(34, 221, 210, 0.2);
             }
 
         .project-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 0.7rem;
+            margin-top: 1.2rem;
         }
 
         .project-tag {
@@ -551,6 +571,16 @@
                 text-shadow: 0 0 10px rgba(34, 221, 210, 0.7);
             }
 
+        @media (max-width: 992px) {
+            .project-card .project-image {
+                flex: 0 0 45%;
+            }
+            
+            .project-card .project-content {
+                flex: 0 0 50%;
+            }
+        }
+
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 3rem;
@@ -564,8 +594,34 @@
                 grid-template-columns: 1fr;
             }
 
+            .project-card, 
+            .project-card:nth-child(even) {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .project-card .project-image {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+            
+            .project-card .project-content {
+                flex: 0 0 100%;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 576px) {  
             .project-grid {
-                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            
+            .project-card {
+                padding: 20px;
+            }
+            
+            .project-tags {
+                justify-content: center;
             }
         }
 
@@ -696,6 +752,11 @@
         .toast .icon {
             font-size: 1.2rem;
         }
+
+        /* Alternate layout for even projects */
+        .project-card:nth-child(even) {
+            flex-direction: row-reverse;
+        }
     </style>
 </head>
 <body>
@@ -750,18 +811,24 @@
             <h2 class="section-title reveal">Projects</h2>
             <div class="project-grid">
                 <div class="project-card reveal">
-                    <img src="https://i.ibb.co/RTtCJ3Fs/kobe-Wallpaper.jpg" alt="NBA-Pickem-Prediction" border="0">
-                    <h3>NBA Pick'em Prediction'</h3>
-                    <p>This project uses machine learning and statistical analysis to predict player stats (Points, Assists, Rebounds)</p>
-                    <div class="project-tags">
-                        <span class="project-tag">Python</span>
-                        <span class="project-tag">Machine Learning</span>
-                        <span class="project-tag">Web Scrape</span>
+                    <div class="project-image">
+                        <img src="https://i.ibb.co/RTtCJ3Fs/kobe-Wallpaper.jpg" alt="NBA-Pickem-Prediction" border="0">
+                    </div>
+                    <div class="project-content">
+                        <h3>NBA Pick'em Prediction'</h3>
+                        <p>This project uses machine learning and statistical analysis to predict player stats (Points, Assists, Rebounds)</p>
+                        <div class="project-tags">
+                            <span class="project-tag">Python</span>
+                            <span class="project-tag">Machine Learning</span>
+                            <span class="project-tag">Web Scrape</span>
+                        </div>
                     </div>
                 </div>
-                <a href="https://supply-chain-genai-forecasting.streamlit.app" target="_blank" style="text-decoration: none; color: inherit;" class="project-card reveal"></a>
-                    <div>
-                        <img src="https://i.ibb.co/VYNQTg9W/New-Project.png" alt="Timeseries-Forecasting-GenAI" border="0">
+                <a href="https://supply-chain-genai-forecasting.streamlit.app" target="_blank" style="text-decoration: none; color: inherit;" class="project-card reveal">
+                    <div class="project-image">
+                        <img src="https://i.ibb.co/VYNQTg9W/New-Project.png" alt="Timeseries-Forecasting-GenAI">
+                    </div>
+                    <div class="project-content">
                         <h3>Supply Chain Forecasting Generative AI</h3>
                         <p>A powerful time series forecasting application for supply chain management, leveraging Prophet and Generative AI for insights.</p>
                         <div class="project-tags">
@@ -772,8 +839,10 @@
                     </div>
                 </a>
                 <a href="https://www.loqly.ai" target="_blank" style="text-decoration: none; color: inherit;" class="project-card reveal">
-                    <div >
+                    <div class="project-image">
                         <img src="https://i.ibb.co/ks4ZqtBw/Whats-App-Image-2025-05-04-at-22-21-52-405d7ec1.jpg" alt="LoqlyAI">
+                    </div>
+                    <div class="project-content">
                         <h3>LoqlyAI</h3>
                         <p>AI-powered chatbot for customer support and sales automation for businesses.</p>
                         <div class="project-tags">
