@@ -380,12 +380,40 @@
             font-weight: 600;
             cursor: pointer;
             transition: transform 0.3s, background-color 0.3s, box-shadow 0.3s;
+            position: relative;
         }
 
             .btn:hover {
                 transform: translateY(-5px);
                 background-color: #1eb3a9;
                 box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 0 15px rgba(34, 221, 210, 0.5);
+            }
+            
+            .btn.loading {
+                padding-right: 3.5rem;
+            }
+            
+            .btn.loading:after {
+                content: "";
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 1.2rem;
+                height: 1.2rem;
+                border: 2px solid transparent;
+                border-top-color: white;
+                border-radius: 50%;
+                animation: button-loading-spinner 1s ease infinite;
+            }
+            
+            @keyframes button-loading-spinner {
+                from {
+                    transform: translateY(-50%) rotate(0turn);
+                }
+                to {
+                    transform: translateY(-50%) rotate(1turn);
+                }
             }
 
         footer {
@@ -457,9 +485,49 @@
             justify-content: space-between;
             align-items: center;
         }
+        /* Chat container styles */
+        .ai-chat-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+        }
+
+        /* Chat button styles */
+        .ai-chat-button {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: #647183;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Chat icon */
+        .ai-chat-button svg {
+        width: 30px;
+        height: 30px;
+        }
+
+        /* Chat iframe */
+        .ai-chat-iframe {
+        display: none;
+        width: 500px;
+        height: 600px;
+        position: fixed;
+        bottom: 90px;
+        right: 20px;
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
 
         .logo {
-            font-size: 1.5rem;
+            font-size: .5rem;
             font-weight: 700;
             color: var(--text);
             text-decoration: none;
@@ -548,7 +616,7 @@
 
         .skill-card {
             flex: 0 0 auto;
-            width: 120px;
+            width: 160px;
             height: 120px;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
@@ -569,17 +637,65 @@
             }
 
             .skill-card img {
-                width: 40px;
-                height: 40px;
+                width: 50px;
+                height: 50px;
                 object-fit: contain;
                 margin-bottom: 0.5rem;
             }
 
             .skill-card p {
-                font-size: 0.9rem;
+                font-size: 0.95rem;
                 font-weight: 500;
                 color: var(--text);
             }
+
+        /* Toast notification styles */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .toast {
+            padding: 12px 20px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-size: 0.9rem;
+            max-width: 350px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--accent);
+        }
+
+        .toast.error {
+            border-left: 4px solid #ff4757;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast .icon {
+            font-size: 1.2rem;
+        }
     </style>
 </head>
 <body>
@@ -591,6 +707,17 @@
 
     <div id="threejs-container"></div>
 
+    <!-- Toast container -->
+    <div class="toast-container" id="toast-container"></div>
+    
+    <div class="ai-chat-container" id="ai-chatbot-container-asst_bz3B2QCbFOEFg1UE6TmrZwod">
+        <div class="ai-chat-button" id="ai-chat-toggle-asst_bz3B2QCbFOEFg1UE6TmrZwod">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+        </div>
+        <iframe id="ai-chat-iframe-asst_bz3B2QCbFOEFg1UE6TmrZwod" class="ai-chat-iframe" src="https://chatbot-integration-seven.vercel.app/shared/asst_bz3B2QCbFOEFg1UE6TmrZwod" frameborder="0"></iframe>
+    </div>
     <nav class="navbar">
         <div class="container navbar-container">
             <a href="#" class="logo">I. Jonathan Sugijono</a>
@@ -632,26 +759,30 @@
                         <span class="project-tag">Web Scrape</span>
                     </div>
                 </div>
-                <div class="project-card reveal">
-                    <img src="https://i.ibb.co/VYNQTg9W/New-Project.png" alt="Timeseries-Forecasting-GenAI" border="0">
-                    <h3>Supply Chain Forecasting Generative AI</h3>
-                    <p>A powerful time series forecasting application for supply chain management, leveraging Prophet and Generative AI for insights.</p>
-                    <div class="project-tags">
-                        <span class="project-tag">Python</span>
-                        <span class="project-tag">Streamlit</span>
-                        <span class="project-tag">Prophet</span>
+                <a href="https://supply-chain-genai-forecasting.streamlit.app" target="_blank" style="text-decoration: none; color: inherit;" class="project-card reveal"></a>
+                    <div>
+                        <img src="https://i.ibb.co/VYNQTg9W/New-Project.png" alt="Timeseries-Forecasting-GenAI" border="0">
+                        <h3>Supply Chain Forecasting Generative AI</h3>
+                        <p>A powerful time series forecasting application for supply chain management, leveraging Prophet and Generative AI for insights.</p>
+                        <div class="project-tags">
+                            <span class="project-tag">Python</span>
+                            <span class="project-tag">Streamlit</span>
+                            <span class="project-tag">Prophet</span>
+                        </div>
                     </div>
-                </div>
-                <div class="project-card reveal">
-                    <img src="https://picsum.photos/350/200?random=3" alt="Project Three Screenshot">
-                    <h3>Project Three</h3>
-                    <p>AI-powered content recommendation engine that learns user preferences over time.</p>
-                    <div class="project-tags">
-                        <span class="project-tag">Python</span>
-                        <span class="project-tag">TensorFlow</span>
-                        <span class="project-tag">Flask</span>
+                </a>
+                <a href="https://www.loqly.ai" target="_blank" style="text-decoration: none; color: inherit;" class="project-card reveal">
+                    <div >
+                        <img src="https://i.ibb.co/ks4ZqtBw/Whats-App-Image-2025-05-04-at-22-21-52-405d7ec1.jpg" alt="LoqlyAI">
+                        <h3>LoqlyAI</h3>
+                        <p>AI-powered chatbot for customer support and sales automation for businesses.</p>
+                        <div class="project-tags">
+                            <span class="project-tag">Python</span>
+                            <span class="project-tag">LLM</span>
+                            <span class="project-tag">AI Agent</span>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
     </section>
@@ -834,6 +965,22 @@
 
         window.addEventListener('scroll', revealElements);
 
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleButton = document.getElementById('ai-chat-toggle-asst_bz3B2QCbFOEFg1UE6TmrZwod');
+            const chatIframe = document.getElementById('ai-chat-iframe-asst_bz3B2QCbFOEFg1UE6TmrZwod');
+            let isOpen = false;
+            
+            toggleButton.addEventListener('click', function() {
+            isOpen = !isOpen;
+            chatIframe.style.display = isOpen ? 'block' : 'none';
+            // Optional: Focus iframe when opened
+            // if (isOpen) chatIframe.contentWindow.focus();
+            });
+            
+            
+        });
+
         function revealElements() {
             const reveals = document.querySelectorAll('.reveal');
             for (let i = 0; i < reveals.length; i++) {
@@ -850,8 +997,84 @@
         if (contactForm) {
             contactForm.addEventListener('submit', function (e) {
                 e.preventDefault();
-                alert('Thanks for your message! In a real implementation, this would be sent to a backend.');
+                
+                const submitButton = this.querySelector('button[type="submit"]');
+                submitButton.classList.add('loading');
+                submitButton.disabled = true;
+                
+                // Get form values
+                const name = document.querySelector('.form-control[placeholder="Your Name"]').value;
+                const email = document.querySelector('.form-control[placeholder="Your Email"]').value;
+                const message = document.querySelector('.form-control[placeholder="Your Message"]').value;
+                
+                // Create the data object to send
+                const formData = {
+                    name: name,
+                    email: email,
+                    message: message
+                };
+                
+                // Send data to webhook
+                fetch('https://hook.us1.make.com/7tggos71m6jqkqj9d73o03lxbn34gxo9', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                })
+                .then(response => {
+                    submitButton.classList.remove('loading');
+                    submitButton.disabled = false;
+                    
+                    if (response.ok) {
+                        showToast('success', 'Message sent successfully! I will get back to you soon.');
+                        contactForm.reset(); // Clear the form
+                    } else {
+                        showToast('error', 'There was an issue sending your message. Please try again later.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    submitButton.classList.remove('loading');
+                    submitButton.disabled = false;
+                    showToast('error', 'There was an error sending your message. Please try again later.');
+                });
             });
+        }
+
+        // Toast notification function
+        function showToast(type, message) {
+            const toastContainer = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            let icon = '';
+            if (type === 'success') {
+                icon = '<span class="icon">✓</span>';
+            } else if (type === 'error') {
+                icon = '<span class="icon">✕</span>';
+            }
+            
+            toast.innerHTML = `${icon}${message}`;
+            toastContainer.appendChild(toast);
+            
+            // Trigger reflow to enable animation
+            toast.offsetHeight;
+            
+            // Show the toast
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                
+                // Remove from DOM after animation completes
+                setTimeout(() => {
+                    toastContainer.removeChild(toast);
+                }, 300);
+            }, 5000);
         }
 
         revealElements();
